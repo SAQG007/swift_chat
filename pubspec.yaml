@@ -43,6 +43,8 @@ dependencies:
   flutter_social_button: ^1.1.4+1
   url_launcher: ^6.1.14
   package_info_plus: ^4.1.0
+  socket_io_client: ^2.0.3+1
+  flutter_chat_bubble: ^2.0.2
 
 dev_dependencies:
   flutter_test:

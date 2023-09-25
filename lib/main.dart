@@ -3,9 +3,9 @@ import 'package:swift_chat/config/functions.dart';
 import 'package:swift_chat/pages/splash_screen.dart';
 import 'package:swift_chat/themes/theme.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  setAppName();
+  await setAppName();
   runApp(const MyApp());
 }
 

@@ -4,7 +4,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:swift_chat/config/functions.dart';
 import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/pages/home.dart';
 import 'package:swift_chat/pages/no_internet_page.dart';
@@ -23,7 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    getPackageInfo();
     _checkConnectivityStatus();
   }
 

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/widgets/home_menu.dart';
@@ -52,37 +53,43 @@ class _HomeState extends State<Home> {
   
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            appName,
-            style: Theme.of(context).textTheme.displaySmall,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Card(
-              elevation: 5.0,
-              child: Container(
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0)
-                ),
-                child: _isLoading
-                ? const CircularProgressIndicator() // show if loading is true
-                : _showHome
-                ? const HomeMenu() // show if user name is available
-                : Login(  // show if user name is not available
-                  onNameProvided: (value) {
-                    _changeShowHomeState(value);
-                  },
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              appName,
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Card(
+                elevation: 5.0,
+                child: Container(
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0)
+                  ),
+                  child: _isLoading
+                  ? const CircularProgressIndicator() // show if loading is true
+                  : _showHome
+                  ? const HomeMenu() // show if user name is available
+                  : Login(  // show if user name is not available
+                    onNameProvided: (value) {
+                      _changeShowHomeState(value);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -28,10 +28,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkConnectivityStatus() async {
     final connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi) {
+      _toggleIsConnected(true);
       Future.delayed(const Duration(seconds: 3), _navigateToHome);
     }
     else {
-      _toggleIsConnected();
+      _toggleIsConnected(false);
       Fluttertoast.showToast(
         msg: "No internet connection",
         toastLength: Toast.LENGTH_LONG,
@@ -43,9 +44,9 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  void _toggleIsConnected() {
+  void _toggleIsConnected(bool value) {
     setState(() {
-      _isConnected = !_isConnected;
+      _isConnected = value;
     });
   }
 

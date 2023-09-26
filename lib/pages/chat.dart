@@ -82,6 +82,10 @@ class _ChatState extends State<Chat> {
       socket.on("message", (msg) {
         _setMessage("destination", msg);
       });
+      
+      socket.on("user-joined", (memberName) {
+        _setMessage("system", "$memberName has joined the chat");
+      });
     });
   }
 
@@ -231,7 +235,9 @@ class _ChatState extends State<Chat> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return ChatBubble(
+                return message.type != "system"
+                // display if the message is not a system type message
+                ? ChatBubble(
                   clipper: message.type == "source"
                   ? ChatBubbleClipper4(type: BubbleType.sendBubble)
                   : ChatBubbleClipper4(type: BubbleType.receiverBubble),
@@ -251,10 +257,18 @@ class _ChatState extends State<Chat> {
                       style: TextStyle(
                         color: message.type == "source"
                         ? Colors.white
-                        : Colors.black
+                        : Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
+                )
+                // display if the message is a system type message
+                : Chip(
+                  label: Text(
+                    message.message,
+                  ),
+                  shape: const StadiumBorder(),
                 );
               },
             )

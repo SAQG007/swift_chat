@@ -12,7 +12,7 @@ class HomeMenu extends StatefulWidget {
 
 class _HomeMenuState extends State<HomeMenu> {
 
-  final TextEditingController _chatNameController = TextEditingController();
+  final TextEditingController _chatJoiningDetailsController = TextEditingController();
 
   // isChatCreating bool will help to show dialog on the Chat page and show the Text button accordingly
   void _showChatNameInputDialog(bool isChatCreating) {
@@ -21,82 +21,55 @@ class _HomeMenuState extends State<HomeMenu> {
       builder: (context) {
         return AlertDialog(
           icon: const Icon(Icons.group_add_outlined),
-          title: const Text("Enter Room Name"),
+          title: Text(
+            isChatCreating ? "Enter Room Name" : "Enter Room ID",
+          ),
           content: TextFormField(
-            controller: _chatNameController,
+            controller: _chatJoiningDetailsController,
             keyboardType: TextInputType.name,
             textCapitalization: TextCapitalization.words,
-            maxLength: 20,
+            maxLength: isChatCreating ? 20 : 6,
             maxLengthEnforcement: MaxLengthEnforcement.enforced,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
-              labelText: "Name",
-              prefixIcon: const Icon(Icons.badge_outlined),
+              labelText: isChatCreating ? "Room Name" : "Room ID",
+              prefixIcon: Icon(
+                isChatCreating ? Icons.badge_outlined : Icons.pin_outlined
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                _chatJoiningDetailsController.clear();
               },
               child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
-                if(_chatNameController.text.isNotEmpty) {
+                if(_chatJoiningDetailsController.text.isNotEmpty) {
                   Navigator.pop(context);
-                  _showInfoDialog(isChatCreating);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Chat(
+                        isChatCreated: isChatCreating,
+                        chatJoingDetails: _chatJoiningDetailsController.text
+                      ),
+                    ),
+                  );
                 }
               },
               child: Text(
-                isChatCreating
-                ? "Create"
-                : "Join"
+                isChatCreating ? "Create" : "Join",
               ),
             ),
           ],
         );
       },
-    );
-  }
-
-  void _showInfoDialog(bool isChatCreating) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          icon: const Icon(Icons.info_outline),
-          title: Text(
-            isChatCreating
-            ? "Chat Room Created"
-            : "Chat Room Joined"
-          ),
-          content: Text(
-            isChatCreating
-            ? "Welcome to the chat room! Please be aware that anyone can join using the chat name. For your safety and privacy, avoid sharing personal information or important credentials during conversations. Let's keep the chat respectful and fun!"
-            : "Welcome to the chat room! Please note that when joining this chat room, you will not be able to view previous messages. The conversation starts fresh from this point forward."
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Chat(
-                      isChatCreated: isChatCreating,
-                      chatName: _chatNameController.text,
-                    ),
-                  ),
-                );
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      }
     );
   }
 
@@ -106,7 +79,7 @@ class _HomeMenuState extends State<HomeMenu> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          "Hello, $userName",
+          "Welcome, $userName",
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(

@@ -25,6 +25,14 @@ class _LeaveChatDialogState extends State<LeaveChatDialog> {
       actions: [
         TextButton(
           onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            "Cancel",
+          ),
+        ),
+        TextButton(
+          onPressed: () {
             widget.leaveChat();
             Navigator.pushReplacement(
               context,
@@ -35,14 +43,6 @@ class _LeaveChatDialogState extends State<LeaveChatDialog> {
           },
           child: const Text(
             "Leave",
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text(
-            "Cancel",
           ),
         ),
       ],

@@ -6,6 +6,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/models/message_model.dart';
 import 'package:swift_chat/widgets/chat/chat_info_dialog.dart';
+import 'package:swift_chat/widgets/chat/chat_members_dialog.dart';
 import 'package:swift_chat/widgets/chat/no_room_found_dialog.dart';
 
 class Chat extends StatefulWidget {
@@ -27,6 +28,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
 
   final List<MessageModel> _messages = [];
+  final List<String> _chatMembers = [];
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
@@ -63,6 +65,7 @@ class _ChatState extends State<Chat> {
       socket.on("generated-roomId", (roomId) {
         setState(() {
           _chatRoomId = roomId;
+          _chatMembers.add(userName);
         });
         _showInfoDialog();
       });
@@ -84,6 +87,10 @@ class _ChatState extends State<Chat> {
       
       socket.on("user-joined", (memberName) {
         _setMessage("system", "$memberName has joined the chat");
+
+        setState(() {
+          _chatMembers.add(memberName);
+        });
       });
     });
   }
@@ -127,6 +134,18 @@ class _ChatState extends State<Chat> {
       },
     );
   }
+  
+  void _showChatMembersDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return ChatMembersDialog(
+          chatMembers: _chatMembers,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,8 +164,8 @@ class _ChatState extends State<Chat> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.view_list_outlined),
+            onPressed: _showChatMembersDialog,
+            icon: const Icon(Icons.contacts_outlined),
           ),
           IconButton(
             onPressed: () {

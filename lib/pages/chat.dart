@@ -89,6 +89,7 @@ class _ChatState extends State<Chat> {
           _chatRoomId = widget.chatJoiningDetails;
           _chatName = chatName;
         });
+        _showInfoDialog();
       });
 
       socket.on("room-not-found", (data) {
@@ -109,7 +110,7 @@ class _ChatState extends State<Chat> {
       });
       
       socket.on("members-list", (members) {
-        // get members list from socket server and store it
+        // receive members list from socket server and store it
         setState(() {
           _chatMembers = members;
         });
@@ -153,8 +154,6 @@ class _ChatState extends State<Chat> {
 
   void _leaveChat() {
     socket.emit("leave-chat", [userName, _chatRoomId]);
-    // disconnect user from the socket server
-    socket.disconnect();
   }
 
   void _showInfoDialog() {

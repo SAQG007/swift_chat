@@ -17,8 +17,8 @@ class _LeaveChatDialogState extends State<LeaveChatDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      icon: const Icon(Icons.priority_high_outlined),
-      title: const Text("No room found"),
+      icon: const Icon(Icons.exit_to_app_outlined),
+      title: const Text("Leave Chat Room"),
       content: const Text(
         "Are you sure that you want to leave the chat? You will not be able to see the previous messages again.",
       ),

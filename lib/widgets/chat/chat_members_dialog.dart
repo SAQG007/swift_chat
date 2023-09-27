@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ChatMembersDialog extends StatefulWidget {
-  final List<String> chatMembers;
+  final List<dynamic> chatMembers;
 
   const ChatMembersDialog({
     Key? key,

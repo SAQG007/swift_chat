@@ -57,7 +57,7 @@ class _HomeMenuState extends State<HomeMenu> {
                     MaterialPageRoute(
                       builder: (context) => Chat(
                         isChatCreated: isChatCreating,
-                        chatJoingDetails: _chatJoiningDetailsController.text
+                        chatJoiningDetails: _chatJoiningDetailsController.text
                       ),
                     ),
                   );

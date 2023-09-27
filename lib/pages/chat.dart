@@ -31,7 +31,6 @@ class _ChatState extends State<Chat> {
   final List<String> _chatMembers = [];
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
-  final FocusNode _messageFocusNode = FocusNode();
   String _chatName = "";
   String _chatRoomId = "";
 
@@ -225,7 +224,6 @@ class _ChatState extends State<Chat> {
             padding: const EdgeInsets.all(10.0),
             child: TextFormField(
               controller: _messageController,
-              focusNode: _messageFocusNode,
               keyboardType: TextInputType.multiline,
               textCapitalization: TextCapitalization.sentences,
               maxLines: null,
@@ -244,9 +242,6 @@ class _ChatState extends State<Chat> {
                   icon: const Icon(Icons.send_outlined),
                 ),
               ),
-              onTapOutside: (event) {
-                _messageFocusNode.unfocus();
-              },
             ),
           ),
         ],

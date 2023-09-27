@@ -31,6 +31,7 @@ class _ChatState extends State<Chat> {
   final List<String> _chatMembers = [];
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _chatScrollController = ScrollController();
   String _chatName = "";
   String _chatRoomId = "";
 
@@ -109,6 +110,14 @@ class _ChatState extends State<Chat> {
     setState(() {
       _messages.add(messageModel);
     });
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _chatScrollController.animateTo(
+        _chatScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
   }
 
   void _showInfoDialog() {
@@ -179,6 +188,7 @@ class _ChatState extends State<Chat> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _chatScrollController,
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];

@@ -7,18 +7,19 @@ import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/models/message_model.dart';
 import 'package:swift_chat/widgets/chat/chat_info_dialog.dart';
 import 'package:swift_chat/widgets/chat/chat_members_dialog.dart';
+import 'package:swift_chat/widgets/chat/leave_chat_dialog.dart';
 import 'package:swift_chat/widgets/chat/no_room_found_dialog.dart';
 
 class Chat extends StatefulWidget {
   // to handle that is the chat created or joined to show info dialog accordingly
   final bool isChatCreated;
   // this will work as chat name in case of creating a chat room and a chat room id in case of joining a chat room
-  final String chatJoingDetails;
+  final String chatJoiningDetails;
 
   const Chat({
     Key? key,
     required this.isChatCreated,
-    required this.chatJoingDetails,
+    required this.chatJoiningDetails,
   }) : super(key: key);
 
   @override
@@ -28,7 +29,7 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
 
   final List<MessageModel> _messages = [];
-  final List<String> _chatMembers = [];
+  List<dynamic> _chatMembers = [];
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _chatScrollController = ScrollController();
@@ -39,7 +40,7 @@ class _ChatState extends State<Chat> {
   void initState() {
     super.initState();
     setState(() {
-      _chatName = widget.chatJoingDetails;
+      _chatName = widget.chatJoiningDetails;
     });
     _handleSocketConnection();
   }
@@ -49,30 +50,43 @@ class _ChatState extends State<Chat> {
       "transports": ["websocket"],
       "autoConnect": false,
     });
+
     socket.connect();
 
+    // if isChatCreating is true then create a new chat room
     if(widget.isChatCreated) {
-      socket.emit("create-chat", [userName, widget.chatJoingDetails]);
+      // widget.chatJoiningDetails is chat room name in this case
+      socket.emit("create-chat", [userName, widget.chatJoiningDetails]);
+      
+      // add the creatr as the first user in list
+      setState(() {
+        _chatMembers.add(userName);
+      });
     }
+    // if isChatCreating is false then join the user to the chat room
     else {
       setState(() {
-        _chatRoomId = widget.chatJoingDetails;
+        _chatRoomId = widget.chatJoiningDetails;
       });
-      socket.emit("join-chat", [userName, widget.chatJoingDetails]);
+      // widget.chatJoiningDetails is chat room ID in this case
+      socket.emit("join-chat", [userName, widget.chatJoiningDetails]);
     }
 
     socket.onConnect((data) {
+      // in case of chat room creation
       socket.on("generated-roomId", (roomId) {
+        // get the generated room ID from socket server and store it
         setState(() {
           _chatRoomId = roomId;
-          _chatMembers.add(userName);
         });
         _showInfoDialog();
       });
-      
+
+      // in case of chat room joining
       socket.on("chat-room-name", (chatName) {
+        // get the chat room name from socket server and store it
         setState(() {
-          _chatRoomId = widget.chatJoingDetails;
+          _chatRoomId = widget.chatJoiningDetails;
           _chatName = chatName;
         });
       });
@@ -81,6 +95,7 @@ class _ChatState extends State<Chat> {
         _showRoomNotFoundDialog();
       });
 
+      // in case of sending or receiving messages
       socket.on("message", (msg) {
         _setMessage("destination", msg);
       });
@@ -90,6 +105,21 @@ class _ChatState extends State<Chat> {
 
         setState(() {
           _chatMembers.add(memberName);
+        });
+      });
+      
+      socket.on("members-list", (members) {
+        // get members list from socket server and store it
+        setState(() {
+          _chatMembers = members;
+        });
+      });
+      
+      socket.on("user-left", (memberName) {
+        _setMessage("system", "$memberName has left the chat");
+
+        setState(() {
+          _chatMembers.remove(memberName);
         });
       });
     });
@@ -111,6 +141,7 @@ class _ChatState extends State<Chat> {
       _messages.add(messageModel);
     });
 
+    // scroll to the bottom of chat list after setting message
     Future.delayed(const Duration(milliseconds: 100), () {
       _chatScrollController.animateTo(
         _chatScrollController.position.maxScrollExtent,
@@ -118,6 +149,12 @@ class _ChatState extends State<Chat> {
         curve: Curves.easeIn,
       );
     });
+  }
+
+  void _leaveChat() {
+    socket.emit("leave-chat", [userName, _chatRoomId]);
+    // disconnect user from the socket server
+    socket.disconnect();
   }
 
   void _showInfoDialog() {
@@ -154,6 +191,18 @@ class _ChatState extends State<Chat> {
       },
     );
   }
+  
+  void _showLeaveChatDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return LeaveChatDialog(
+          leaveChat: _leaveChat,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,10 +225,7 @@ class _ChatState extends State<Chat> {
             icon: const Icon(Icons.contacts_outlined),
           ),
           IconButton(
-            onPressed: () {
-              // show confirmation dialog
-              // exit
-            },
+            onPressed: _showLeaveChatDialog,
             icon: const Icon(Icons.exit_to_app_outlined)
           ),
         ],

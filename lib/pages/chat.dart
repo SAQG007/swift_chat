@@ -58,7 +58,7 @@ class _ChatState extends State<Chat> {
       // widget.chatJoiningDetails is chat room name in this case
       socket.emit("create-chat", [userName, widget.chatJoiningDetails]);
       
-      // add the creatr as the first user in list
+      // add the creator as the first user in list
       setState(() {
         _chatMembers.add(userName);
       });

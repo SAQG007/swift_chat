@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/models/message_model.dart';
-import 'package:swift_chat/pages/home.dart';
+import 'package:swift_chat/widgets/chat/chat_info_dialog.dart';
+import 'package:swift_chat/widgets/chat/no_room_found_dialog.dart';
 
 class Chat extends StatefulWidget {
   // to handle that is the chat created or joined to show info dialog accordingly
@@ -27,7 +26,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
 
-  List<MessageModel> _messages = [];
+  final List<MessageModel> _messages = [];
   late IO.Socket socket;
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
@@ -111,60 +110,9 @@ class _ChatState extends State<Chat> {
       barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          icon: const Icon(Icons.info_outline),
-          title: Text(
-            widget.isChatCreated
-            ? "Chat Room Created"
-            : "Chat Room Joined"
-          ),
-          content: widget.isChatCreated
-          ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "Welcome to the chat room! Please be aware that anyone can join using the chat room's unique ID. For your safety and privacy, avoid sharing personal information or important credentials during conversations or share the chat room's unique ID with only the people you trust. Let's keep the chat respectful and fun!"
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Row(
-                children: [
-                  const Text(
-                    "Chat Unique ID: "
-                  ),
-                  TextButton.icon(
-                    onPressed: () async {
-                      await Clipboard.setData(ClipboardData(text: _chatRoomId));
-                      Fluttertoast.showToast(
-                        msg: "ID copied to clipboard",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        fontSize: 16.0,
-                        backgroundColor: Theme.of(context).colorScheme.outline,
-                      );
-                    },
-                    icon: const Icon(Icons.copy_outlined),
-                    label: Text(
-                      _chatRoomId
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          )
-          : const Text( 
-            "Welcome to the chat room! Please note that when joining this chat room, you will not be able to view previous messages. The conversation starts fresh from this point forward.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("OK"),
-            ),
-          ],
+        return ChatInfoDialog(
+          isChatCreated: widget.isChatCreated,
+          chatRoomId: _chatRoomId,
         );
       }
     );
@@ -175,26 +123,7 @@ class _ChatState extends State<Chat> {
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return AlertDialog(
-          icon: const Icon(Icons.priority_high_outlined),
-          title: const Text("No room found"),
-          content: const Text("Unable to find a room with the provided Room ID. Please try again with the correct ID or try creating a new chat room."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Home()
-                  ),
-                );
-              },
-              child: const Text(
-                "Go Back",
-              ),
-            ),
-          ],
-        );
+        return const NoRoomFoundDialog();
       },
     );
   }

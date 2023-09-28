@@ -182,6 +182,10 @@ class _ChatState extends State<Chat> {
   }
 
   void _showRoomNotFoundDialog() {
+    setState(() {
+      _canDisplayInfoDialog = false;
+    });
+    
     showDialog(
       barrierDismissible: false,
       context: context,

@@ -9,6 +9,14 @@ Swift Chat is a real-time chat application built with Flutter and powered by Soc
 - **View Members List:** Easily view a list of chat room members to see who's currently online and participating in the conversation.
 - **Member Join or Leave Updates:** Receive updates when users join or leave the chat room, helping you stay informed about the dynamics of the conversation.
 
+## Gallery
+
+### Registration
+https://github.com/SAQG007/swift_chat/assets/91311393/24b6c757-ff22-47b4-b817-70281ab557f6
+
+### Chat
+https://github.com/SAQG007/swift_chat/assets/91311393/cb9b333c-de11-461d-8055-812f1f312713
+
 ## Getting Started
 1. Clone this repository.
 2. Make sure you have Flutter installed on your machine.

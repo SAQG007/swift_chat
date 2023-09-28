@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swift_chat/config/globals.dart';
-import 'package:swift_chat/widgets/home_menu.dart';
-import 'package:swift_chat/widgets/login.dart';
+import 'package:swift_chat/widgets/home/home_menu.dart';
+import 'package:swift_chat/widgets/home/login.dart';
 
 class Home extends StatefulWidget {
   const Home({ Key? key }) : super(key: key);

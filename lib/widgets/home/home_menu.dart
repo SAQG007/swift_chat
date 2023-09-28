@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:swift_chat/config/globals.dart';
 import 'package:swift_chat/pages/chat.dart';
+import 'package:swift_chat/widgets/home/social_media_buttons.dart';
 
 class HomeMenu extends StatefulWidget {
   const HomeMenu({ Key? key }) : super(key: key);
@@ -106,6 +107,10 @@ class _HomeMenuState extends State<HomeMenu> {
             child: const Text("Join a Chat Room"),
           ),
         ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        const SocialMediaButtons(),
       ],
     );
   }

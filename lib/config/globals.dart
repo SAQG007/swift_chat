@@ -15,4 +15,4 @@ final Uri linkedInUrl = Uri.parse('https://www.linkedin.com/in/syed-abdul-qadir-
 final Uri gitHubUrl = Uri.parse('https://github.com/SAQG007');
 
 // ip address of the user's network
-const String ipAddress = "http://192.168.0.103";
+const String ipAddress = "http://192.168.0.104";

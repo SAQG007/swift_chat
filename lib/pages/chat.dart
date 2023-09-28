@@ -36,6 +36,8 @@ class _ChatState extends State<Chat> {
   String _chatName = "";
   String _chatRoomId = "";
 
+  bool _canDisplayInfoDialog = true;
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +81,10 @@ class _ChatState extends State<Chat> {
         setState(() {
           _chatRoomId = roomId;
         });
-        _showInfoDialog();
+        
+        if(_canDisplayInfoDialog) {
+          _showInfoDialog();
+        }
       });
 
       // in case of chat room joining
@@ -89,7 +94,10 @@ class _ChatState extends State<Chat> {
           _chatRoomId = widget.chatJoiningDetails;
           _chatName = chatName;
         });
-        _showInfoDialog();
+
+        if(_canDisplayInfoDialog) {
+          _showInfoDialog();
+        }
       });
 
       socket.on("room-not-found", (data) {
@@ -157,6 +165,10 @@ class _ChatState extends State<Chat> {
   }
 
   void _showInfoDialog() {
+    setState(() {
+      _canDisplayInfoDialog = false;
+    });
+
     showDialog(
       barrierDismissible: false,
       context: context,

@@ -12,10 +12,10 @@ Swift Chat is a real-time chat application built with Flutter and powered by Soc
 ## Gallery
 
 ### Registration
-https://github.com/SAQG007/swift_chat/assets/91311393/24b6c757-ff22-47b4-b817-70281ab557f6
+https://github.com/SAQG007/swift_chat/assets/91311393/d8b085e7-c7a2-4b35-9753-76135ac68a62
 
 ### Chat
-https://github.com/SAQG007/swift_chat/assets/91311393/cb9b333c-de11-461d-8055-812f1f312713
+https://github.com/SAQG007/swift_chat/assets/91311393/bf3f5706-7461-475e-850e-7dc46d468d35
 
 ## Getting Started
 1. Clone this repository.
